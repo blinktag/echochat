@@ -20,3 +20,6 @@ Route::get('/chat', 'ChatController@index')->name('chat');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/messages', 'MessageController@index')->name('messages');
+Route::post('/messages', 'MessageController@store')->name('messages.store');

@@ -1419,17 +1419,28 @@ Vue.component('chat-composer', __webpack_require__(52));
 var app = new Vue({
   el: '#app',
   data: {
-    messages: [{
-      message: 'hi',
-      user: 'John'
-    }, {
-      message: 'hey there!',
-      user: 'Mark'
-    }]
+    messages: []
   },
+  created: function created() {
+    this.fetchMessages();
+  },
+
   methods: {
     addMessage: function addMessage(message) {
-      this.messages.push(message);
+      var _this = this;
+
+      axios.post('/messages', message).then(function (response) {
+        if (response.data.success === true) {
+          _this.messages.push(message);
+        }
+      });
+    },
+    fetchMessages: function fetchMessages() {
+      var _this2 = this;
+
+      axios.get('/messages').then(function (response) {
+        _this2.messages = response.data;
+      });
     }
   }
 });
@@ -43482,7 +43493,7 @@ var render = function() {
   return _c("div", { staticClass: "chat-message" }, [
     _c("p", [_vm._v(_vm._s(_vm.message.message))]),
     _vm._v(" "),
-    _c("small", [_vm._v(_vm._s(_vm.message.user))])
+    _c("small", [_vm._v(_vm._s(_vm.message.user.name))])
   ])
 }
 var staticRenderFns = []
@@ -43598,6 +43609,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['messages']
@@ -43614,9 +43628,16 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "chat-log" },
-    _vm._l(_vm.messages, function(message, id) {
-      return _c("chat-message", { key: id, attrs: { message: message } })
-    })
+    [
+      _vm._l(_vm.messages, function(message, id) {
+        return _c("chat-message", { key: id, attrs: { message: message } })
+      }),
+      _vm._v(" "),
+      _vm.messages.length === 0
+        ? _c("div", [_vm._v("\n    Nothing here yet!\n  ")])
+        : _vm._e()
+    ],
+    2
   )
 }
 var staticRenderFns = []
@@ -43740,6 +43761,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['user'],
   data: function data() {
     return {
       messageText: ''
@@ -43750,7 +43772,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     sendMessage: function sendMessage() {
       this.$emit('messagesent', {
         message: this.messageText,
-        user: 'John Done'
+        user: { name: this.user }
       });
       this.messageText = '';
     }

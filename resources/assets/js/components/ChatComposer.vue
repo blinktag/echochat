@@ -10,16 +10,17 @@
 import axios from 'axios';
 
 export default {
+  props: ['user'],
   data() {
     return {
-      messageText: '',
+      messageText: ''
     }
   },
   methods: {
     sendMessage() {
       this.$emit('messagesent', {
         message: this.messageText,
-        user: 'John Done'
+        user: { name: this.user }
       });
       this.messageText = '';
     }

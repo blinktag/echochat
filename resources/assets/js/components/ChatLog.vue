@@ -1,6 +1,9 @@
 <template>
   <div class="chat-log">
     <chat-message v-for="(message, id) in messages" :key="id" :message="message"></chat-message>
+    <div v-if="messages.length === 0">
+      Nothing here yet!
+    </div>
   </div>
 </template>
 
